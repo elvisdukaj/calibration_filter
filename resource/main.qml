@@ -38,7 +38,7 @@ ApplicationWindow {
             VideoOutput {
                 source: camera
                 anchors.fill: parent
-                focus : visible // to receive focus and capture key events when visible
+                focus: visible
                 filters: [filter]
             }
 
@@ -50,7 +50,6 @@ ApplicationWindow {
                 id: thresholdSlider
                 from: 0
                 to: 255
-
             }
         }
     }

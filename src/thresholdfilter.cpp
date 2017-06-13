@@ -73,44 +73,35 @@ QVideoFrame ThresholdFilterRunnable::run(QVideoFrame* frame, const QVideoSurface
     }
 #endif
 
-    auto width = frame->width();
-    auto height = frame->height();
+    if (frame->map(QAbstractVideoBuffer::ReadWrite))
+    {
+        cv::Mat mat;
+        cv::Mat grayscale;
 
-    cv::Mat mat;
+        switch (frame->pixelFormat()) {
+        case QVideoFrame::Format_RGB32:
+            mat = fromRGB32(*frame);
+            cv::cvtColor(mat, grayscale, cv::COLOR_RGBA2GRAY);
+            break;
 
-    frame->map(QAbstractVideoBuffer::ReadOnly);
+        case QVideoFrame::Format_YUV420P:
+            grayscale = fromYUV420p(*frame);
+            break;
+        }
 
-    switch (frame->pixelFormat()) {
-    case QVideoFrame::Format_YUV420P:
-        mat = fromYUV420p(*frame);
-        break;
+        cv::GaussianBlur(grayscale, grayscale, cv::Size{9, 9}, 20.0);
+        cv::Canny(grayscale, grayscale, 3 * m_filter->threshold(), m_filter->threshold());
 
-    case QVideoFrame::Format_RGB32:
-        mat = fromRGB32(*frame);
-        break;
+        switch (frame->pixelFormat()) {
+        case QVideoFrame::Format_RGB32:
+            cv::cvtColor(grayscale, mat, cv::COLOR_GRAY2RGBA);
+            break;
+        }
 
-    default:
-        qDebug() << "Format not supported";
+        frame->unmap();
     }
 
-    frame->unmap();
-
-    cv::Mat grayScale;
-    cv::cvtColor(mat, grayScale, cv::COLOR_RGB2GRAY);
-
-    cv::threshold(grayScale, grayScale, m_filter->threshold(), 255.0, cv::THRESH_BINARY);
-
-    cv::cvtColor(grayScale, mat, cv::COLOR_GRAY2RGB);
-
-    QImage image(mat.ptr<uchar>(), width, height, QImage::Format_RGB888);
-
-//    static int i = 0;
-//    auto filename = std::string{"test"} + std::to_string(i++) + std::string{".bmp"};
-//    auto filename2 = std::string{"zzz"} + std::to_string(i++) + std::string{".bmp"};
-//    image.save(filename.c_str());
-//    cv::imwrite(filename2, mat);
-
-    return QVideoFrame{image};
+    return *frame;
 }
 
 bool ThresholdFilterRunnable::isFrameValid(QVideoFrame* frame) const noexcept
@@ -125,10 +116,8 @@ cv::Mat ThresholdFilterRunnable::fromYUV420p(QVideoFrame& frame) const
     auto height = frame.height();
 
     cv::Mat grayscale(height, width, CV_8UC1, data);
-    cv::Mat rgb;
-    cv::cvtColor(grayscale, rgb, cv::COLOR_GRAY2RGB);
 
-    return rgb;
+    return grayscale;
 }
 
 cv::Mat ThresholdFilterRunnable::fromRGB32(QVideoFrame& frame) const
@@ -138,8 +127,5 @@ cv::Mat ThresholdFilterRunnable::fromRGB32(QVideoFrame& frame) const
     auto height = frame.height();
 
     cv::Mat rgba(height, width, CV_8UC4, data);
-    cv::Mat rgb;
-    cv::cvtColor(rgba, rgb, cv::COLOR_RGBA2RGB);
-
-    return rgb;
+    return rgba;
 }
