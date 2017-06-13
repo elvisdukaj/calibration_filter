@@ -116,7 +116,8 @@ cv::Mat ThresholdFilterRunnable::fromYUV420p(QVideoFrame& frame) const
     auto height = frame.height();
 
     cv::Mat grayscale(height, width, CV_8UC1, data);
-
+    // reset u v components
+    std::fill(data + (width * height), data + frame.mappedBytes(), 127);
     return grayscale;
 }
 
