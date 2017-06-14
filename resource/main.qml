@@ -38,13 +38,9 @@ ApplicationWindow {
             VideoOutput {
                 source: camera
                 anchors.fill: parent
-<<<<<<< HEAD
+
                 focus : visible // to receive focus and capture key events when visible
                 filters: [thresholdFilter]
-=======
-                focus: visible
-                filters: [filter]
->>>>>>> 01233423ed3355f95c1253afa0a27309744ef0bc
             }
 
             Image {
