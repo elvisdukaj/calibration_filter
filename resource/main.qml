@@ -22,12 +22,6 @@ ApplicationWindow {
         Page {
             Camera {
                 id: camera
-
-                imageCapture {
-                    onImageCaptured: {
-                        photoPreview.source = preview
-                    }
-                }
             }
 
             ThresholdFilter {
@@ -47,10 +41,6 @@ ApplicationWindow {
 
                 focus : visible // to receive focus and capture key events when visible
                 filters: [thresholdFilter]
-            }
-
-            Image {
-                id: photoPreview
             }
 
             Slider {

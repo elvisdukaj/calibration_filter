@@ -29,9 +29,8 @@ QVideoFrame CannyFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceForm
     auto width = frame->width();
     auto height = frame->height();
 
-    if (frame->isWritable())
+    if (frame->map(QAbstractVideoBuffer::ReadWrite))
     {
-        frame->map(QAbstractVideoBuffer::ReadWrite);
         auto data = frame->bits();
 
         cv::Mat mat;
@@ -39,6 +38,11 @@ QVideoFrame CannyFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceForm
 
         switch (frame->pixelFormat()) {
         case QVideoFrame::Format_RGB32:
+            mat = cv::Mat{height, width, CV_8UC4, data};
+            cv::cvtColor(mat, grayscale, cv::COLOR_RGBA2GRAY);
+            break;
+
+        case QVideoFrame::Format_RGB24:
             mat = cv::Mat{height, width, CV_8UC3, data};
             cv::cvtColor(mat, grayscale, cv::COLOR_RGBA2GRAY);
             break;
@@ -60,6 +64,10 @@ QVideoFrame CannyFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceForm
         case QVideoFrame::Format_RGB32:
             cv::cvtColor(grayscale, mat, cv::COLOR_GRAY2RGBA);
             break;
+
+        case QVideoFrame::Format_RGB24:
+            cv::cvtColor(grayscale, mat, cv::COLOR_GRAY2RGB);
+            break;
         }
 
         frame->unmap();
@@ -67,39 +75,7 @@ QVideoFrame CannyFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceForm
     }
     else
     {
-        frame->map(QAbstractVideoBuffer::ReadOnly);
-        auto data = frame->bits();
-
-        cv::Mat mat;
-        cv::Mat grayscale;
-
-        switch (frame->pixelFormat()) {
-        case QVideoFrame::Format_RGB32:
-            mat = cv::Mat{height, width, CV_8UC3, data};
-            cv::cvtColor(mat, grayscale, cv::COLOR_RGBA2GRAY);
-            break;
-
-        case QVideoFrame::Format_YUV420P:
-            mat = cv::Mat{height, width, CV_8UC1, data};
-            mat.copyTo(grayscale);
-            break;
-
-        default:
-            qDebug() << "Unknown format";
-            frame->unmap();
-            return *frame;
-        }
-
-        frame->unmap();
-
-        cv::flip(grayscale, grayscale, 1);
-        cv::Canny(grayscale, grayscale, 3 * m_filter->threshold(), m_filter->threshold());
-
-        cv::cvtColor(grayscale, m_result, cv::COLOR_GRAY2RGBA);
-
-        m_videoFrameImage = QImage{m_result.ptr<uchar>(), width, height, QImage::Format_RGB32};
-
-        return QVideoFrame{m_videoFrameImage};
+        return *frame;
     }
 }
 
