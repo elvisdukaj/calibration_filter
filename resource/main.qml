@@ -17,6 +17,9 @@ ApplicationWindow {
         currentIndex: tabBar.currentIndex
 
         Page1 {
+            Image {
+                id: unwrapped
+            }
         }
 
         Page {
@@ -36,6 +39,11 @@ ApplicationWindow {
 
             CalibrationFilter {
                 id: calibrationFilter
+                threshold: thresholdSlider.value
+
+                onCalibrationFinished: {
+
+                }
             }
 
             VideoOutput {

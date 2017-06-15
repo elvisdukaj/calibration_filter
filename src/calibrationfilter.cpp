@@ -1,4 +1,6 @@
 #include "calibrationfilter.h"
+#include <opencv2/core.hpp>
+#include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
 #include <QDebug>
 #include <stdexcept>
@@ -34,16 +36,20 @@ QVideoFrame CalibrationFilterRunnable::run(QVideoFrame* frame, const QVideoSurfa
         videoframeToGrayscale(frame, grayscale, frameMat);
 
         cv::flip(grayscale, grayscale, 1);
-        cv::Canny(grayscale, grayscale, 3 * m_filter->threshold(), m_filter->threshold());
+        cv::threshold(grayscale, grayscale, m_filter->threshold(), 255.0, cv::THRESH_BINARY);
 
-        vector<vector<cv::Point>> contours;
-        vector<cv::Vec4i> hierarchy;
-        cv::findContours(grayscale, contours, hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_SIMPLE);
+        vector<cv::Point2f> corners;
+        auto res = cv::findChessboardCorners(grayscale, cv::Size(9, 6), corners);
 
         grayscaleToVideoFrame(frame, grayscale, frameMat);
 
-        for( int i = 0; i< contours.size(); i++ )
-            cv::drawContours(frameMat, contours, i, cv::Scalar(255,0,0,0), 2, 8, hierarchy, 0, cv::Point());
+        if (res)
+        {
+            cv::cornerSubPix(grayscale, corners, cv::Size(11, 11), cv::Size(-1, -1),
+                cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+
+            cv::drawChessboardCorners(frameMat, cv::Size(9, 6), cv::Mat(corners), res);
+        }
     }
     catch(const std::exception& exc)
     {
