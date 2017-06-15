@@ -31,9 +31,6 @@ public:
 
 private:
     bool isFrameValid(QVideoFrame* frame) const noexcept;
-    cv::Mat fromYUV420p(QVideoFrame& frame) const;
-    cv::Mat fromRGB32(QVideoFrame& frame) const;
-
 
 private:
     ThresholdFilter* m_filter;
