@@ -1,9 +1,9 @@
 #pragma once
 
-#include <abstractopencvrunnablefilter.h>
+#include "abstractopencvrunnablefilter.h"
 #include <opencv2/core.hpp>
 
-class CannyFilter : public QAbstractVideoFilter {
+class CalibrationFilter : public QAbstractVideoFilter {
     Q_OBJECT
 
     Q_PROPERTY(int threshold READ threshold WRITE threshold NOTIFY thresholdChanged)
@@ -18,14 +18,17 @@ signals:
     void thresholdChanged();
 
 private:
+    friend class ThresholdFilterRunnable;
+
+private:
     int m_threshold = 128;
 };
 
-class CannyFilterRunnable : public AbstractVideoFilterRunnable {
+class CalibrationFilterRunnable : public AbstractVideoFilterRunnable {
 public:
-    CannyFilterRunnable(CannyFilter* filter);
+    CalibrationFilterRunnable(CalibrationFilter* filter);
     QVideoFrame run(QVideoFrame* input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags) override;
 
 private:
-    CannyFilter* m_filter;
+    CalibrationFilter* m_filter;
 };

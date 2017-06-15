@@ -3,7 +3,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 import QtMultimedia 5.5
 
-import qubicaamf.vision 1.0
+import com.qubicaamf.vision 1.0
 
 ApplicationWindow {
     visible: true
@@ -29,10 +29,13 @@ ApplicationWindow {
                 threshold: thresholdSlider.value
             }
 
-
             CannyFilter{
                 id: cannyFilter
                 threshold: thresholdSlider.value
+            }
+
+            CalibrationFilter {
+                id: calibrationFilter
             }
 
             VideoOutput {
@@ -40,7 +43,7 @@ ApplicationWindow {
                 anchors.fill: parent
 
                 focus : visible // to receive focus and capture key events when visible
-                filters: [thresholdFilter]
+                filters: [calibrationFilter]
             }
 
             Slider {

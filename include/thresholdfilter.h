@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QAbstractVideoFilter>
+#include "abstractopencvrunnablefilter.h"
 #include <opencv2/core.hpp>
 
 class ThresholdFilter : public QAbstractVideoFilter {
@@ -24,13 +24,10 @@ private:
     int m_threshold = 128;
 };
 
-class ThresholdFilterRunnable : public QVideoFilterRunnable {
+class ThresholdFilterRunnable : public AbstractVideoFilterRunnable {
 public:
     ThresholdFilterRunnable(ThresholdFilter* filter);
     QVideoFrame run(QVideoFrame* input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags) override;
-
-private:
-    bool isFrameValid(QVideoFrame* frame) const noexcept;
 
 private:
     ThresholdFilter* m_filter;

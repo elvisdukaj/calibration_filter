@@ -1,20 +1,20 @@
-#include "thresholdfilter.h"
+#include "calibrationfilter.h"
 #include <opencv2/imgproc.hpp>
 #include <QDebug>
 #include <stdexcept>
 using namespace std;
 
-QVideoFilterRunnable* ThresholdFilter::createFilterRunnable()
+QVideoFilterRunnable* CalibrationFilter::createFilterRunnable()
 {
-    return new ThresholdFilterRunnable(this);
+    return new CalibrationFilterRunnable(this);
 }
 
-ThresholdFilterRunnable::ThresholdFilterRunnable(ThresholdFilter* filter)
+CalibrationFilterRunnable::CalibrationFilterRunnable(CalibrationFilter* filter)
     : m_filter{filter}
 {
 }
 
-QVideoFrame ThresholdFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceFormat&, QVideoFilterRunnable::RunFlags)
+QVideoFrame CalibrationFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceFormat&, QVideoFilterRunnable::RunFlags)
 {
     if (!isFrameValid(frame))
     {
@@ -34,17 +34,16 @@ QVideoFrame ThresholdFilterRunnable::run(QVideoFrame* frame, const QVideoSurface
         videoframeToGrayscale(frame, grayscale, frameMat);
 
         cv::flip(grayscale, grayscale, 1);
-        cv::threshold(grayscale, grayscale, m_filter->threshold(), 255.0, cv::THRESH_BINARY);
+        cv::Canny(grayscale, grayscale, 3 * m_filter->threshold(), m_filter->threshold());
 
         vector<vector<cv::Point>> contours;
         vector<cv::Vec4i> hierarchy;
+        cv::findContours(grayscale, contours, hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_SIMPLE);
 
         grayscaleToVideoFrame(frame, grayscale, frameMat);
 
-//        cv::findContours(grayscale, contours, hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_SIMPLE);
-
-        //            for( int i = 0; i< contours.size(); i++ )
-        //                cv::drawContours(frameMat, contours, i, cv::Scalar(255,0,0,0), 2, 8, hierarchy, 0, cv::Point());
+        for( int i = 0; i< contours.size(); i++ )
+            cv::drawContours(frameMat, contours, i, cv::Scalar(255,0,0,0), 2, 8, hierarchy, 0, cv::Point());
     }
     catch(const std::exception& exc)
     {
@@ -52,7 +51,5 @@ QVideoFrame ThresholdFilterRunnable::run(QVideoFrame* frame, const QVideoSurface
     }
 
     frame->unmap();
-
-
     return *frame;
 }
