@@ -48,7 +48,10 @@ ApplicationWindow {
 
             VideoOutput {
                 source: camera
-                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                anchors.top: parent.top
+                width: parent.width / 2
 
                 focus : visible // to receive focus and capture key events when visible
                 filters: [calibrationFilter]
