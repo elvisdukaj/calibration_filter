@@ -45,6 +45,7 @@ ApplicationWindow {
 
             Slider {
                 id: thresholdSlider
+                value: 127
                 from: 0
                 to: 255
             }

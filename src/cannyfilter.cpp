@@ -73,10 +73,8 @@ QVideoFrame CannyFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceForm
         frame->unmap();
         return *frame;
     }
-    else
-    {
-        return *frame;
-    }
+
+    return *frame;
 }
 
 bool CannyFilterRunnable::isFrameValid(QVideoFrame* frame) const noexcept

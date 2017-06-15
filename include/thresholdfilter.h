@@ -34,7 +34,4 @@ private:
 
 private:
     ThresholdFilter* m_filter;
-    QImage m_image;
-    cv::Mat m_frameResultMat;
-    QVideoFrame m_frameResult;
 };

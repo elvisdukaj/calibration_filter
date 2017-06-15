@@ -31,6 +31,4 @@ private:
 
 private:
     CannyFilter* m_filter;
-    QImage m_videoFrameImage;
-    cv::Mat m_result;
 };
