@@ -63,6 +63,7 @@ QVideoFrame CannyFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceForm
         }
 
         frame->unmap();
+        return *frame;
     }
     else
     {
