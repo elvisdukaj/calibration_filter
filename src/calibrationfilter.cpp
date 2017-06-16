@@ -182,20 +182,22 @@ cv::Mat CameraCalibrator::CameraCalibrator::remap(const cv::Mat& image)
 {
     cv::Mat undistorted;
     if (m_mustInitUndistort) { // called once per calibration
-        cv::initUndistortRectifyMap(
-                    m_cameraMatrix, // computed camera matrix
-                    m_distCoeffs,   // computed distortion matrix
-                    cv::Mat(),      // optional rectification (none)
-                    cv::Mat(),      // camera matrix to generate undistorted
-                    image.size(),   // size of undistorted
-                    CV_32FC1,       // type of output map
-                    m_mapX, m_mapY  // the x and y mapping functions
-                    );
+        cv::undistort(image, undistorted, m_cameraMatrix, m_distCoeffs);
+
+//        cv::initUndistortRectifyMap(
+//                    m_cameraMatrix, // computed camera matrix
+//                    m_distCoeffs,   // computed distortion matrix
+//                    cv::Mat(),      // optional rectification (none)
+//                    cv::Mat(),      // camera matrix to generate undistorted
+//                    image.size(),   // size of undistorted
+//                    CV_32FC1,       // type of output map
+//                    m_mapX, m_mapY  // the x and y mapping functions
+//                    );
         m_mustInitUndistort= false;
     }
 
     // Apply mapping functions
-    cv::remap(image, undistorted, m_mapX, m_mapY, cv::INTER_LINEAR);
+//    cv::remap(image, undistorted, m_mapX, m_mapY, cv::INTER_LINEAR);
     return undistorted;
 }
 
