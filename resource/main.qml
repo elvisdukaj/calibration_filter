@@ -11,69 +11,72 @@ ApplicationWindow {
     height: 480
     title: qsTr("Hello World")
 
-    SwipeView {
-        id: swipeView
-        anchors.fill: parent
-        currentIndex: tabBar.currentIndex
+    Camera {
+        id: camera
+    }
 
-        Page1 {
-            Image {
-                id: unwrapped
-            }
+    ThresholdFilter {
+        id: thresholdFilter
+        threshold: thresholdSlider.value
+    }
+
+    CannyFilter{
+        id: cannyFilter
+        threshold: thresholdSlider.value
+    }
+
+    CalibrationFilter {
+        id: calibrationFilter
+        threshold: thresholdSlider.value
+
+        onChessBoardFound: {
+            timer.start()
+            calibrationFilter.showNegative = true;
+        }
+    }
+
+    Timer {
+        id: timer
+        interval: 2000
+        running: false
+        repeat: false
+
+        onTriggered: {
+            calibrationFilter.showNegative = false;
+        }
+    }
+
+    RowLayout {
+        VideoOutput {
+            id: videoOutput
+            source: camera
+
+            focus : visible // to receive focus and capture key events when visible
+            filters: [calibrationFilter]
         }
 
-        Page {
-            Camera {
-                id: camera
-            }
+        ColumnLayout {
+            anchors.top: parent.top
 
-            ThresholdFilter {
-                id: thresholdFilter
-                threshold: thresholdSlider.value
-            }
-
-            CannyFilter{
-                id: cannyFilter
-                threshold: thresholdSlider.value
-            }
-
-            CalibrationFilter {
-                id: calibrationFilter
-                threshold: thresholdSlider.value
-
-                onCalibrationFinished: {
-
+            RowLayout {
+                Label {
+                    text: qsTr("Threshold value: ")
                 }
-            }
 
-            VideoOutput {
-                source: camera
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
-                width: parent.width / 2
-
-                focus : visible // to receive focus and capture key events when visible
-                filters: [calibrationFilter]
+                Label {
+                    text: Math.floor(thresholdSlider.value)
+                }
             }
 
             Slider {
                 id: thresholdSlider
+
                 value: 127
                 from: 0
                 to: 255
+                stepSize: 1
             }
         }
     }
 
-    footer: TabBar {
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-        TabButton {
-            text: qsTr("First")
-        }
-        TabButton {
-            text: qsTr("Second")
-        }
-    }
 }

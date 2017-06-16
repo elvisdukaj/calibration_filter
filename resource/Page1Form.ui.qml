@@ -21,4 +21,12 @@ Item {
             text: qsTr("Press Me")
         }
     }
+
+    Slider {
+        id: slider
+        x: 157
+        y: 207
+        stepSize: 1
+        value: 0.5
+    }
 }
