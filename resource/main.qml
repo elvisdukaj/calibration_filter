@@ -33,6 +33,12 @@ ApplicationWindow {
             timer.start()
             calibrationFilter.showNegative = true;
         }
+
+        onCalibrationFinished: {
+            showUndistorted.enabled = true
+        }
+
+       showUnsistorted: showUndistorted.checked
     }
 
     Timer {
@@ -75,6 +81,15 @@ ApplicationWindow {
                 from: 0
                 to: 255
                 stepSize: 1
+            }
+
+            Switch {
+                id: showUndistorted
+
+                text: qsTr("Show Undistorted")
+                checked: false
+                checkable: true
+                enabled: false
             }
         }
     }

@@ -31,7 +31,7 @@ QVideoFrame ThresholdFilterRunnable::run(QVideoFrame* frame, const QVideoSurface
     try
     {
         cv::Mat frameMat, grayscale;
-        videoframeToGrayscale(frame, grayscale, frameMat);
+        videoFrameInGrayScaleAndColor(frame, grayscale, frameMat);
 
         cv::flip(grayscale, grayscale, 1);
         cv::threshold(grayscale, grayscale, m_filter->threshold(), 255.0, cv::THRESH_BINARY);

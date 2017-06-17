@@ -31,7 +31,7 @@ QVideoFrame CannyFilterRunnable::run(QVideoFrame* frame, const QVideoSurfaceForm
     try
     {
         cv::Mat frameMat, grayscale;
-        videoframeToGrayscale(frame, grayscale, frameMat);
+        videoFrameInGrayScaleAndColor(frame, grayscale, frameMat);
 
         cv::Canny(grayscale, grayscale, 3 * m_filter->threshold(), m_filter->threshold());
 

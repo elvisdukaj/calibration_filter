@@ -29,4 +29,14 @@ Item {
         stepSize: 1
         value: 0.5
     }
+
+    Switch {
+        id: switch1
+        x: 204
+        y: 301
+        text: qsTr("Show Undistort")
+        autoExclusive: false
+        checkable: false
+        checked: true
+    }
 }

@@ -9,7 +9,7 @@ bool AbstractVideoFilterRunnable::isFrameValid(QVideoFrame* frame) const noexcep
     return frame->isValid() && frame->handleType() == QAbstractVideoBuffer::NoHandle;
 }
 
-void AbstractVideoFilterRunnable::videoframeToGrayscale(QVideoFrame* frame, cv::Mat& grayscale, cv::Mat& frameMat)
+void AbstractVideoFilterRunnable::videoFrameInGrayScaleAndColor(QVideoFrame* frame, cv::Mat& grayscale, cv::Mat& frameMat)
 {
     auto width = frame->width();
     auto height = frame->height();

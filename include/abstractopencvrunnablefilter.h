@@ -8,6 +8,6 @@ public:
     bool isFrameValid(QVideoFrame* frame) const noexcept;
 
 protected:
-    void videoframeToGrayscale(QVideoFrame* frame, cv::Mat& grayscale, cv::Mat& frameMat);
+    void videoFrameInGrayScaleAndColor(QVideoFrame* frame, cv::Mat& grayscale, cv::Mat& frameMat);
     void grayscaleToVideoFrame(QVideoFrame* frame, const cv::Mat& grayscale, cv::Mat& frameMat) const;
 };
