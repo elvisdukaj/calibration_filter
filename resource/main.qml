@@ -15,8 +15,8 @@ ApplicationWindow {
         id: camera
     }
 
-    ThresholdFilter {
-        id: thresholdFilter
+    MarkerDetectorFilter {
+        id: markDetectorFilter
         threshold: thresholdSlider.value
     }
 
@@ -58,7 +58,7 @@ ApplicationWindow {
             source: camera
 
             focus : visible // to receive focus and capture key events when visible
-            filters: [calibrationFilter]
+            filters: [markDetectorFilter]
         }
 
         ColumnLayout {

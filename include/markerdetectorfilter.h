@@ -32,3 +32,33 @@ public:
 private:
     MarkerDetectorFilter* m_filter;
 };
+
+class Mark {
+public:
+    Mark(const cv::Mat& image);
+    uint64_t id() const;
+private:
+    uint64_t m_id;
+};
+
+class MarksDetector {
+public:
+    MarksDetector(int threshold, int minContournSize = 30);
+
+    void processFame(cv::Mat& grayscale);
+    uint64_t encode() const;
+
+private:
+    void binarize(cv::Mat& grayscale);
+    void findContours();
+    void findCandidates();
+
+private:
+    int m_threshold;
+    const int m_minCountournSize;
+    uint64_t m_id;
+    cv::Mat m_binarized;
+    std::vector<std::vector<cv::Point>> m_contours;
+    void filterContours();
+};
+
