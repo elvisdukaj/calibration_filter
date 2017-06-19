@@ -34,7 +34,7 @@ public:
     void showUnsistorted(bool show) noexcept { m_showUnsistorted = show; }
 
 signals:
-    void chessBoardFound(bool);
+    void chessBoardFound();
     void calibrationFinished();
 
 private:

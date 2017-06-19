@@ -105,7 +105,7 @@ void CalibrationFilterRunnable::acquireFrame(QVideoFrame* frame)
                     true
                     );
 
-        emit m_filter->chessBoardFound(true);
+        emit m_filter->chessBoardFound();
         cv::bitwise_not(frameMat, m_lastFrameWithChessBoard);
         cv::resize(m_lastFrameWithChessBoard, m_lastFrameWithChessBoard,
                    cv::Size{0, 0}, 0.25, 0.25
