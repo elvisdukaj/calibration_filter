@@ -219,7 +219,6 @@ void CameraCalibrator::CameraCalibrator::remap(const cv::Mat& image, cv::Mat& ou
 {
     if (m_mustInitUndistort)
     {
-//        cv::undistort(image, undistorted, m_cameraMatrix, m_distCoeffs);
         cv::initUndistortRectifyMap(
                     m_cameraMatrix,     // computed camera matrix
                     m_distCoeffs,       // computed distortion matrix

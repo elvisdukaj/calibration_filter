@@ -8,7 +8,6 @@ class CalibrationFilter : public QAbstractVideoFilter {
     Q_OBJECT
 
     Q_PROPERTY(QSize chessBoardSize READ chessBoardSize WRITE chessBoardSize)
-    Q_PROPERTY(int threshold READ threshold WRITE threshold)
 
     Q_PROPERTY(bool chessBoardFound READ isChessBoardFound WRITE setChessBoardFound NOTIFY chessBoardFound)
     Q_PROPERTY(bool calibrated READ isCalibrated WRITE setCalibrated NOTIFY calibrationFinished)
@@ -21,9 +20,6 @@ public:
 
     QSize chessBoardSize() const noexcept { return m_chessboardSize; }
     void chessBoardSize(const QSize& size) { m_chessboardSize = size; }
-
-    int threshold() const { return m_threshold; }
-    void threshold(int thr) { m_threshold = thr; }
 
     bool isChessBoardFound() const { return m_chessboardFound; }
     void setChessBoardFound(bool f) { m_chessboardFound = f; }

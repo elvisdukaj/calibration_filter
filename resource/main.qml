@@ -15,19 +15,8 @@ ApplicationWindow {
         id: camera
     }
 
-    MarkerDetectorFilter {
-        id: markDetectorFilter
-        threshold: thresholdSlider.value
-    }
-
-    CannyFilter{
-        id: cannyFilter
-        threshold: thresholdSlider.value
-    }
-
     CalibrationFilter {
         id: calibrationFilter
-        threshold: thresholdSlider.value
 
         onChessBoardFound: {
             timer.start()
@@ -38,7 +27,16 @@ ApplicationWindow {
             showUndistorted.enabled = true
         }
 
-       showUnsistorted: showUndistorted.checked
+        showUnsistorted: showUndistorted.checked
+    }
+
+    VideoOutput {
+        id: videoOutput
+        source: camera
+        anchors.fill: parent
+
+        focus : visible // to receive focus and capture key events when visible
+        filters: [calibrationFilter]
     }
 
     Timer {
@@ -52,46 +50,15 @@ ApplicationWindow {
         }
     }
 
-    RowLayout {
-        VideoOutput {
-            id: videoOutput
-            source: camera
+    Switch {
+        id: showUndistorted
 
-            focus : visible // to receive focus and capture key events when visible
-            filters: [calibrationFilter]
-        }
+        anchors.top: parent.top
+        anchors.right: parent.right
 
-        ColumnLayout {
-            anchors.top: parent.top
-
-            RowLayout {
-                Label {
-                    text: qsTr("Threshold value: ")
-                }
-
-                Label {
-                    text: Math.floor(thresholdSlider.value)
-                }
-            }
-
-            Slider {
-                id: thresholdSlider
-
-                value: 127
-                from: 0
-                to: 255
-                stepSize: 1
-            }
-
-            Switch {
-                id: showUndistorted
-
-                text: qsTr("Show Undistorted")
-                checked: false
-                checkable: true
-                enabled: false
-            }
-        }
+        text: qsTr("Show Undistorted")
+        checked: false
+        checkable: true
+        enabled: false
     }
-
 }
