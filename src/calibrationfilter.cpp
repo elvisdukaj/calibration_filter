@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 QVideoFilterRunnable* CalibrationFilter::createFilterRunnable()
@@ -200,11 +201,15 @@ double CameraCalibrator::calibrate(cv::Size& imageSize)
                 m_translationtVecs
                 );
 
+    ofstream cameraMatrixFile{"cameraMatrix.yaml"};
+    cameraMatrixFile << m_cameraMatrix;
+
+    ofstream cameraDistortionFile{"cameraDistortion.yaml"};
+    cameraDistortionFile << m_distCoeffs;
+
     stringstream ss;
     ss << "Camera matrix: " << m_cameraMatrix << '\n'
          << "Camera distortion: " << m_distCoeffs << '\n'
-//       << "Camera rotation: " << m_rotationVecs << '\n'
-//       << "Camera translation: " << m_translationtVecs
          << endl;
     qDebug() << ss.str().c_str();
     return res;
@@ -224,7 +229,7 @@ void CameraCalibrator::CameraCalibrator::remap(const cv::Mat& image, cv::Mat& ou
                     CV_32FC1,           // type of output map
                     m_mapX, m_mapY      // the x and y mapping functions
                     );
-//        m_mustInitUndistort = false;
+        m_mustInitUndistort = false;
     }
 
     // Apply mapping functions

@@ -58,7 +58,7 @@ ApplicationWindow {
             source: camera
 
             focus : visible // to receive focus and capture key events when visible
-            filters: [markDetectorFilter]
+            filters: [calibrationFilter]
         }
 
         ColumnLayout {

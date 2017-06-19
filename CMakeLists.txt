@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 set (CMAKE_CXX_STANDARD 14)
-project(test_filter LANGUAGES CXX)
+project(calibration_filter LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
