@@ -9,6 +9,17 @@
 #include <fstream>
 using namespace std;
 
+// Print camera parameters to the output file
+static void saveCameraParams(const cv::Mat& cameraMatrix, const cv::Mat& distCoeffs, double totalAvgErr )
+{
+    cv::FileStorage fs( "cameraCalibration.xml", cv::FileStorage::WRITE );
+
+    fs << "CameraMatrix" << cameraMatrix;
+    fs << "DistortionCoefficients" << distCoeffs;
+
+    fs << "AvgReprojection_Error" << totalAvgErr;
+}
+
 QVideoFilterRunnable* CalibrationFilter::createFilterRunnable()
 {
     return new CalibrationFilterRunnable(this);
@@ -114,9 +125,12 @@ void CalibrationFilterRunnable::acquireFrame(QVideoFrame* frame)
         ++m_goodFrames;
         qDebug() << "Frame number " << m_goodFrames;
 
-        if (m_goodFrames == 15)
+        if (m_goodFrames == 25)
         {
             auto error = m_calibrator.calibrate(frameMat.size());
+
+            saveCameraParams(m_calibrator.cameraMatrix(), m_calibrator.distortion(), error);
+
             qDebug() << "calibration done! Error: " << error;
 
             m_filter->setCalibrated();

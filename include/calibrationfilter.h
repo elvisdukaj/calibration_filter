@@ -56,13 +56,16 @@ private:
 
 class CameraCalibrator {
 public:
-    CameraCalibrator(const cv::Size boardSize = cv::Size{9, 6})
+    CameraCalibrator(const cv::Size boardSize = cv::Size{8, 6})
         : m_boardSize{boardSize} {}
 
     std::vector<cv::Point2f> findChessboard(const cv::Mat& mat);
     double calibrate(cv::Size& imageSize);
     void remap(const cv::Mat& image, cv::Mat& outImage);
     const cv::Size boardSize() const noexcept { return m_boardSize; }
+
+    const cv::Mat cameraMatrix() const noexcept { return m_cameraMatrix; }
+    const cv::Mat distortion() const noexcept { return m_distCoeffs; }
 
 private:
     void addPoints(const std::vector<cv::Point2f>& imageCorners);
