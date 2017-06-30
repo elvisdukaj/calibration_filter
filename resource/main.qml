@@ -21,10 +21,12 @@ ApplicationWindow {
         onChessBoardFound: {
             timer.start()
             calibrationFilter.showNegative = true;
+            progressiveText.text = goodFrames + " / " + maxFrames;
         }
 
         onCalibrationFinished: {
             showUndistorted.enabled = true
+            progressiveText.enabled = false
         }
 
         showUnsistorted: showUndistorted.checked
@@ -53,12 +55,21 @@ ApplicationWindow {
     Switch {
         id: showUndistorted
 
-        anchors.top: parent.top
+        anchors.bottom: parent.bottom
         anchors.right: parent.right
 
         text: qsTr("Show Undistorted")
         checked: false
         checkable: true
         enabled: false
+    }
+
+    Label {
+        id: progressiveText
+
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+
+        text: ""
     }
 }

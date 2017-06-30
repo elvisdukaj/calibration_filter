@@ -49,14 +49,15 @@ QVideoFrame CalibrationFilterRunnable::run(QVideoFrame* frame, const QVideoSurfa
         if (m_filter->hasToShowNegative())
             showNegative(frame);
 
-        else if(m_filter->isCalibrated() && m_filter->showUnsistorted())
-            showUndistorted(frame);
-
         else if (!m_filter->isCalibrated())
             acquireFrame(frame);
 
+        else if(m_filter->isCalibrated() && m_filter->showUnsistorted())
+            showUndistorted(frame);
         else
             showFlipped(frame);
+
+
     }
     catch(const std::exception& exc)
     {
@@ -122,10 +123,9 @@ void CalibrationFilterRunnable::acquireFrame(QVideoFrame* frame)
                    cv::Size{0, 0}, 0.25, 0.25
                    );
 
-        ++m_goodFrames;
-        qDebug() << "Frame number " << m_goodFrames;
+        m_filter->addGoodFrame();
 
-        if (m_goodFrames == 25)
+        if (m_filter->goodFrames() == m_filter->maxFrames())
         {
             auto error = m_calibrator.calibrate(frameMat.size());
 

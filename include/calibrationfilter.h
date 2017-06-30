@@ -15,6 +15,9 @@ class CalibrationFilter : public QAbstractVideoFilter {
     Q_PROPERTY(bool showNegative READ hasToShowNegative WRITE setShowNegative)
     Q_PROPERTY(bool showUnsistorted READ showUnsistorted WRITE showUnsistorted)
 
+    Q_PROPERTY(int maxFrames READ maxFrames )
+    Q_PROPERTY(int goodFrames READ goodFrames)
+
 public:
     QVideoFilterRunnable* createFilterRunnable() override;
 
@@ -33,6 +36,13 @@ public:
     bool showUnsistorted() const noexcept { return m_showUnsistorted; }
     void showUnsistorted(bool show) noexcept { m_showUnsistorted = show; }
 
+    int maxFrames() const noexcept { return m_maxFrames; }
+    void maxFrames(int n) noexcept { m_maxFrames = n; }
+
+    int goodFrames() const noexcept { return m_goodFrames; }
+    void addGoodFrame() { ++m_goodFrames; }
+
+
 signals:
     void chessBoardFound();
     void calibrationFinished();
@@ -41,16 +51,13 @@ private:
     friend class ThresholdFilterRunnable;
 
 private:
-    int m_threshold = 128;
-
-    QSize m_chessboardSize = QSize{9, 6};
-
+    QSize m_chessboardSize = QSize{8, 6};
     bool m_calibrated = false;
     bool m_cornerFound = false;
     bool m_chessboardFound = false;
     bool m_showNegative = false;
     bool m_showUnsistorted = true;
-
+    int m_maxFrames = 25;
     int m_goodFrames = 0;
 };
 
@@ -105,6 +112,5 @@ private:
     cv::Mat m_lastFrameWithChessBoard;
     bool m_finished = false;
     CameraCalibrator m_calibrator;
-    int m_goodFrames = 0;
     cv::Mat m_unwrapped;
 };
