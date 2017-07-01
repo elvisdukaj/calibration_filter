@@ -18,16 +18,19 @@ void AbstractVideoFilterRunnable::videoFrameInGrayScaleAndColor(QVideoFrame* fra
     switch (frame->pixelFormat()) {
     case QVideoFrame::Format_RGB32:
         frameMat = cv::Mat{height, width, CV_8UC4, data};
+        cv::flip(frameMat, frameMat, 1);
         cv::cvtColor(frameMat, grayscale, cv::COLOR_RGBA2GRAY);
         return;
 
     case QVideoFrame::Format_RGB24:
         frameMat = cv::Mat{height, width, CV_8UC3, data};
+        cv::flip(frameMat, frameMat, 1);
         cv::cvtColor(frameMat, grayscale, cv::COLOR_RGB2GRAY);
         return;
 
     case QVideoFrame::Format_YUV420P:
         frameMat = cv::Mat{height, width, CV_8UC1, data};
+        cv::flip(frameMat, frameMat, 1);
         grayscale = cv::Mat{height, width, CV_8UC1, data};
         fill(data + (width * height), data + frame->mappedBytes(), 127);
         return;

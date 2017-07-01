@@ -103,9 +103,6 @@ void CalibrationFilterRunnable::acquireFrame(QVideoFrame* frame)
     cv::Mat frameMat, grayscale;
     videoFrameInGrayScaleAndColor(frame, grayscale, frameMat);
 
-    cv::flip(grayscale, grayscale, 1);
-    cv::flip(frameMat, frameMat, 1);
-
     auto corners = m_calibrator.findChessboard(grayscale);
 
     if (!corners.empty())
