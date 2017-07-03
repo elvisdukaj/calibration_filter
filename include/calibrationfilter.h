@@ -107,10 +107,6 @@ private:
 
 private:
     CalibrationFilter* m_filter;
-    std::vector<cv::Point3d> m_wordPoints;
-    std::vector<cv::Point2d> m_imagePoints;
     cv::Mat m_lastFrameWithChessBoard;
-    bool m_finished = false;
     CameraCalibrator m_calibrator;
-    cv::Mat m_unwrapped;
 };
