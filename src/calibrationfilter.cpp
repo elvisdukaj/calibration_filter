@@ -16,7 +16,6 @@ static void saveCameraParams(const cv::Mat& cameraMatrix, const cv::Mat& distCoe
 
     fs << "CameraMatrix" << cameraMatrix;
     fs << "DistortionCoefficients" << distCoeffs;
-
     fs << "AvgReprojection_Error" << totalAvgErr;
 }
 
@@ -212,17 +211,10 @@ double CameraCalibrator::calibrate(cv::Size& imageSize)
                 m_translationtVecs
                 );
 
-    ofstream cameraMatrixFile{"cameraMatrix.yaml"};
-    cameraMatrixFile << m_cameraMatrix;
-
-    ofstream cameraDistortionFile{"cameraDistortion.yaml"};
-    cameraDistortionFile << m_distCoeffs;
-
-    stringstream ss;
-    ss << "Camera matrix: " << m_cameraMatrix << '\n'
+    cout << "Camera matrix: " << m_cameraMatrix << '\n'
          << "Camera distortion: " << m_distCoeffs << '\n'
          << endl;
-    qDebug() << ss.str().c_str();
+
     return res;
 }
 
