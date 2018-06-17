@@ -22,6 +22,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 #include "calibrationfilter.h"
+#include <opencv2/core/types_c.h>
 #include <opencv2/core.hpp>
 #include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
@@ -190,9 +191,9 @@ vector<cv::Point2f> CameraCalibrator::findChessboard(const cv::Mat& grayscale)
         cv::cornerSubPix(
                     grayscale, imageCorners, m_boardSize,
                     cv::Size(-1, -1),
-                    cv::TermCriteria(
+                    cv::TermCriteria{
                         CV_TERMCRIT_EPS + CV_TERMCRIT_ITER,
-                        300, 0.01)
+                        300, 0.01}
                     );
 
         if (imageCorners.size() == m_boardSize.area())
