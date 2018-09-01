@@ -36,6 +36,7 @@ ApplicationWindow {
 
     Camera {
         id: camera
+        deviceId: QtMultimedia.availableCameras[1].deviceId
     }
 
     CalibrationFilter {
